@@ -1,0 +1,81 @@
+import React, { useContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { AppContext } from '../../Context/AppContext';
+
+const FarmersMilkPriceHistory = ({ currentIndex }) => {
+    const { farmersData, userData, backendUrl } = useContext(AppContext);
+    const [milkTransactions, setMilkTransactions] = useState([]);
+   
+   
+
+    useEffect(() => {
+        if (!farmersData || !farmersData[currentIndex]) return; // Ensure farmerData is available
+
+        const getTodaysMilkPrice = async () => {
+            try {
+               
+
+                const response = await axios.post(`${backendUrl}/api/D_owner/get-farmer-milkPrice-history`, {
+                    farmer_id: farmersData[currentIndex]._id,
+                  
+                    D_owner_id: userData.id
+                });
+
+                if (response.data.success) {
+                    setMilkTransactions(response.data.data);
+                   
+                }
+            } catch (error) {
+                toast.error(error.message || "Failed to fetch milk collection data.");
+            }
+        };
+
+        getTodaysMilkPrice();
+    }, [currentIndex, farmersData, backendUrl, userData]);
+
+    // Safe check AFTER useEffect
+    if (!farmersData || !farmersData[currentIndex]) {
+        return <p className="text-danger">Error: Farmer data is not available.</p>;
+    }
+
+    return (
+        <div>
+            <h5 className="text-left mb-3">Milk Rates History</h5>
+            {milkTransactions.length > 0 ? (
+                <div className="table-responsive p-2">
+                    <table className="table table-bordered table-striped table-sm">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Shift</th>
+                                <th>Fat</th>
+                                <th>Price</th>
+                                
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {milkTransactions.map((tx, index) => (
+                                <tr key={index}>
+                                    <td>{tx.farmerName}</td>
+                                    <td>{new Date(tx.date).toISOString().split("T")[0]}</td>
+                                    <td>{tx.shift}</td>
+                                    <td>{tx.fat}</td>
+                                    <td>₹{tx.price}</td>
+                                   
+                                </tr>
+                            ))}
+                         
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <p className="text-center text-muted">No transactions found.</p>
+            )}
+        </div>
+    );
+};
+
+export default FarmersMilkPriceHistory;
