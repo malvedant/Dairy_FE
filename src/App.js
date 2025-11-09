@@ -4,9 +4,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useEffect } from 'react';
+import "./i18n";
+
 import {
   Login, CowFeed, Contact, UserDashBord, Home, Signup, 
-  UpdateProfile, OpenAccountScreen,DairyData,FarmersData,FarmerScreen, MilkDailyCard,BillPayment,AdvancePayment,AllocateCowFeed,FarmersList,AddFarmers,SetMilkPrice,AddMilkCount,AddNewCowFeed,UpdateCowFeed
+  UpdateProfile, OpenAccountScreen,DairyData,FarmersData,FarmerScreen, MilkDailyCard,BillPayment,AdvancePayment,AllocateCowFeed,FarmersList,AddFarmers,SetMilkPrice,AddMilkCount,AddNewCowFeed,UpdateCowFeed,
+  DairyAi
 } from './screens/index';
 
 
@@ -45,6 +48,8 @@ function App() {
         <Route path="/bill-payment" element={<BillPayment/>} />
         <Route path="/farmers-data" element={<FarmersData/>} />
         <Route path="/farmer-screen" element={<FarmerScreen/>} />
+         <Route path="/dairy-ai" element={<DairyAi/>} />
+
       </Routes>
     </div>
   );

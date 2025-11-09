@@ -7,24 +7,24 @@ import axios from "axios";
 import { PushSpinner } from "react-spinners-kit";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import signupImg from "../assetes/signup.png";// Fixed "assetes" typo
+import signupImg from "../assetes/signup.png";
 import { AppContext } from "../Context/AppContext";
 import UserNavbar from "../components/UserNavbar";
+import { useTranslation } from "react-i18next";
 
 function AddFarmers() {
-  // ✅ State Hooks
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [role, setRole] = useState("farmer"); // Default role set
+  const [role, setRole] = useState("farmer");
   const navigate = useNavigate();
 
-  // ✅ Context Hook
-  const { backendUrl, userData,getFarmersData } = useContext(AppContext); 
+  const { backendUrl, userData, getFarmersData } = useContext(AppContext);
 
-  // ✅ Submit Handler
+  const { t } = useTranslation();
+
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -36,7 +36,7 @@ function AddFarmers() {
         password,
         phone,
         role,
-        D_owner_id: userData?.id, 
+        D_owner_id: userData?.id,
       });
 
       setLoading(false);
@@ -50,13 +50,13 @@ function AddFarmers() {
     } catch (error) {
       setLoading(false);
       console.error("Signup Error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t("errorMsg"));
     }
   };
 
   return (
     <div className="container-fluid">
-     <UserNavbar/>
+      <UserNavbar />
       <div className="back-arrow position-absolute top-5 start-0 p-3">
         <FontAwesomeIcon
           icon={faArrowLeft}
@@ -68,7 +68,7 @@ function AddFarmers() {
 
       <ToastContainer />
       <h2 className="text-start my-2 mt-5">
-        <strong>Fill this form for adding a new Farmer</strong>
+        <strong>{t("title")}</strong>
       </h2>
 
       <div className="container p-3">
@@ -78,63 +78,63 @@ function AddFarmers() {
           onSubmit={onSubmitHandler}
         >
           <div data-aos="fade-right" className="container col-md-7">
-            {/* Name Input */}
+            {/* Name */}
             <div className="form-floating mb-3">
               <input
                 type="text"
                 className="form-control"
                 id="fName"
-                placeholder="Name"
+                placeholder={t("namePlaceholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
-              <label htmlFor="fName"> Name</label>
+              <label htmlFor="fName">{t("nameLabel")}</label>
             </div>
 
-            {/* Phone Number Input */}
+            {/* Phone */}
             <div className="form-floating mb-3">
               <input
                 type="number"
                 className="form-control"
                 id="mobileNumber"
-                placeholder="Mobile Number"
+                placeholder={t("phonePlaceholder")}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
               />
-              <label htmlFor="mobileNumber">Mobile Number</label>
+              <label htmlFor="mobileNumber">{t("phoneLabel")}</label>
             </div>
 
-            {/* Email Input */}
+            {/* Email */}
             <div className="form-floating mb-3">
               <input
                 type="email"
                 className="form-control"
                 id="email"
-                placeholder="Email Id"
+                placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <label htmlFor="email">Email Id</label>
+              <label htmlFor="email">{t("emailLabel")}</label>
             </div>
 
-            {/* Password Input */}
+            {/* Password */}
             <div className="form-floating mb-3">
               <input
                 type="password"
                 className="form-control"
                 id="password"
-                placeholder="Set Password"
+                placeholder={t("passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <label htmlFor="password">Set Password</label>
+              <label htmlFor="password">{t("passwordLabel")}</label>
             </div>
 
-            {/* Role Selection */}
+            {/* Role */}
             <div className="form-floating mb-3">
               <select
                 className="form-control"
@@ -143,18 +143,18 @@ function AddFarmers() {
                 onChange={(e) => setRole(e.target.value)}
                 required
               >
-                <option value="farmer">Farmer</option>
+                <option value="farmer">{t("roleOption")}</option>
               </select>
-              <label htmlFor="role">Select Role</label>
+              <label htmlFor="role">{t("roleLabel")}</label>
             </div>
 
             <p className="text-end">
               <Link to="/" style={{ color: "red", textDecoration: "none" }}>
-                Already Have an Account?
+                {t("alreadyAccount")}
               </Link>
             </p>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <div className="text-center my-2">
               <button
                 id="signupButton"
@@ -167,14 +167,17 @@ function AddFarmers() {
                     <PushSpinner size={30} color="white" />
                   </div>
                 ) : (
-                  "Add Farmer"
+                  t("submitBtn")
                 )}
               </button>
             </div>
           </div>
 
-          {/* Signup Image */}
-          <div data-aos="fade-left" className="container mx-auto my-auto loginImageContainer">
+          {/* Image */}
+          <div
+            data-aos="fade-left"
+            className="container mx-auto my-auto loginImageContainer"
+          >
             <img
               id="signUpImage"
               src={signupImg}

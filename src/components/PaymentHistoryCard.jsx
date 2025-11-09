@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { AppContext } from "../Context/AppContext";
+import { useTranslation } from "react-i18next";
 
 const PaymentHistoryCard = () => {
-  
-  const { paymentHistory , getPaymentHistory } = useContext(AppContext);
+  const { t } = useTranslation();
+  const { paymentHistory, getPaymentHistory } = useContext(AppContext);
 
   useEffect(() => {
     getPaymentHistory();
@@ -11,17 +12,17 @@ const PaymentHistoryCard = () => {
 
   return (
     <div>
-      <h5 className="text-center mb-3">Payment Transaction History</h5>
-      {paymentHistory?.length > 0 ? ( // Fix: Using optional chaining
+      <h5 className="text-center mb-3">{t("payment_history")}</h5>
+      {paymentHistory?.length > 0 ? (
         <div className="table-responsive p-2">
           <table className="table table-bordered table-striped table-sm">
             <thead className="table-dark">
               <tr>
-                <th style={{ width: "20%", whiteSpace: "nowrap" }}>Name</th>
-                <th style={{ width: "20%", whiteSpace: "nowrap" }}>Date</th>
-                <th style={{ width: "15%", whiteSpace: "nowrap" }}>Total Bill</th>
-                <th style={{ width: "15%", whiteSpace: "nowrap" }}>From Date</th>
-                <th style={{ width: "15%", whiteSpace: "nowrap" }}>To Date</th>
+                <th style={{ width: "20%", whiteSpace: "nowrap" }}>{t("name")}</th>
+                <th style={{ width: "20%", whiteSpace: "nowrap" }}>{t("date")}</th>
+                <th style={{ width: "15%", whiteSpace: "nowrap" }}>{t("total_bill")}</th>
+                <th style={{ width: "15%", whiteSpace: "nowrap" }}>{t("from_date")}</th>
+                <th style={{ width: "15%", whiteSpace: "nowrap" }}>{t("to_date")}</th>
               </tr>
             </thead>
             <tbody>
@@ -43,7 +44,7 @@ const PaymentHistoryCard = () => {
           </table>
         </div>
       ) : (
-        <p className="text-center text-muted">No Payment History.</p>
+        <p className="text-center text-muted">{t("no_payment_history")}</p>
       )}
     </div>
   );

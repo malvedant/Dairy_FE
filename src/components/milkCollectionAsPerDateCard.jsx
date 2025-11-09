@@ -2,23 +2,22 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../Context/AppContext";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const MilkCollectionAsPerDateCard = () => {
-  const {  userData } = useContext(AppContext);
+  const { t } = useTranslation();
+  const { userData } = useContext(AppContext);
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [milkData, setMilkData] = useState([]);
   const [totalMilkCount, setTotalMilkCount] = useState(0);
   const [totalMilkPrice, setTotalMilkPrice] = useState(0);
 
-  const backendUrl="http://localhost:4000/api/D_owner/get-All-milk-transactions-asper-date"
-
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      console.log("Fetching milk data for date:", date);
       const { data } = await axios.post(
-       'http://localhost:4000/api/D_owner/get-All-milk-transactions-asper-date',
+        "http://localhost:4000/api/D_owner/get-All-milk-transactions-asper-date",
         { D_owner_id: userData.id, date }
       );
 
@@ -27,30 +26,29 @@ const MilkCollectionAsPerDateCard = () => {
         toast.success(data.message);
         setMilkData(data.data);
       } else {
-        toast.error("No data found for this date.");
+        toast.error(t("no_data_date"));
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || t("failed_fetch"));
     } finally {
       setLoading(false);
     }
   };
 
-
   const calculatedTotalMilkCountAndPrice = async () => {
-      try {
-        const { data } = await axios.post("http://localhost:4000/api/D_owner/calculate-todays-milk-price-liters", {
-          D_owner_id: userData.id,
-          date,
-        });
-        if (data.success) {
-          setTotalMilkCount(data.totalMilkCount);
-          setTotalMilkPrice(data.totalMilkPrice);
-        }
-      } catch (error) {
-        toast.error(error.message);
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4000/api/D_owner/calculate-todays-milk-price-liters",
+        { D_owner_id: userData.id, date }
+      );
+      if (data.success) {
+        setTotalMilkCount(data.totalMilkCount);
+        setTotalMilkPrice(data.totalMilkPrice);
       }
-    };
+    } catch (error) {
+      toast.error(error.message || t("failed_fetch"));
+    }
+  };
 
   return (
     <div className="container min-vh-100">
@@ -63,7 +61,7 @@ const MilkCollectionAsPerDateCard = () => {
           onChange={(e) => setDate(e.target.value)}
           disabled={loading}
         />
-        <label htmlFor="date">Select Date</label>
+        <label htmlFor="date">{t("select_date")}</label>
       </div>
 
       {/* Search Button */}
@@ -74,37 +72,56 @@ const MilkCollectionAsPerDateCard = () => {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? "Loading..." : "Search"}
+          {loading ? t("loading") : t("search")}
         </button>
       </div>
 
       {/* Milk Collection Data */}
       <div className="container p-3">
         <h2 className="text-center">
-          <strong>Milk Collection - {date || "Select a Date"}</strong>
+          <strong>
+            {t("milk_collection")} - {date || t("select_date")}
+          </strong>
         </h2>
 
-        <h5>Total Milk: <strong><span id="totalMilkCount">{totalMilkCount}</span> Liters</strong></h5>
-        <h5>Total Milk Price: <strong><span id="totalMilkCount"> ₹{totalMilkPrice}</span> </strong></h5>
+        <h5>
+          {t("total_milk")}: <strong>{totalMilkCount} Liters</strong>
+        </h5>
+        <h5>
+          {t("total_milk_price")}: <strong>₹{totalMilkPrice}</strong>
+        </h5>
 
-       
-        <div className="d-flex flex-column gap-3 ">
-      
-      {milkData.length > 0 ? (
-        milkData.map((data, index) => (
-          <div key={index} className=" d-flex  w-full rounded shadow p-2 gap-1 border border-none">
-            <p>Name: <strong> {data.farmerName || "N/A"}</strong> </p>
-            <p> Fat: <strong> {data.fat || "N/A"}</strong></p>
-            <p> Price: <strong> {data.price || "N/A"}</strong></p>
-            <p>Liters: <strong> {data.liters || "N/A"}</strong></p>
-            <p>Total Price:  <strong> {data.total_value || "N/A"}</strong></p>
-            <p>Shift: <strong> {data.shift || "N/A"}</strong></p>
-          </div>
-        ))
-      ) : (
-        <p>No milk data available.</p>
-      )}
-      </div>
+        <div className="d-flex flex-column gap-3">
+          {milkData.length > 0 ? (
+            milkData.map((data, index) => (
+              <div
+                key={index}
+                className="d-flex w-full rounded shadow p-2 gap-1 border border-none"
+              >
+                <p>
+                  {t("name")}: <strong>{data.farmerName || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("fat")}: <strong>{data.fat || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("price")}: <strong>{data.price || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("liters")}: <strong>{data.liters || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("total_price")}: <strong>{data.total_value || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("shift")}: <strong>{data.shift || "N/A"}</strong>
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>{t("no_data")}</p>
+          )}
+        </div>
       </div>
     </div>
   );

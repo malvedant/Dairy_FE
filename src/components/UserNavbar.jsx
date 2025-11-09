@@ -5,12 +5,15 @@ import { deleteUser } from "../featurs/userSlice";
 import { AppContext } from "../Context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import LanguageSwitcher from "./forms/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 function UserNavbar() {
+  const { t } = useTranslation();
   const { backendUrl, setUserData,setFarmersData } = useContext(AppContext);
 
  
- const navigate = useNavigate(); // Ensure navigate is imported and defined
+ const navigate = useNavigate(); 
 
 const logout = async () => {
     try {
@@ -48,7 +51,7 @@ const logout = async () => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/user">
-          FarmDairy
+          <strong> {t("dairy_Logo")}</strong>
         </Link>
         <button
           className="navbar-toggler"
@@ -65,31 +68,26 @@ const logout = async () => {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <Link className="nav-link active" aria-current="page" to="/user">
-                Home
+               {t("home")}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/show-milk">
-                Check Milk Status
-              </Link>
+            
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/update-profile">
-                Account Update
-              </Link>
-            </li>
+            
           </ul>
           <div className="d-flex">
+            <LanguageSwitcher/>
             <button
               className="btn btn-outline-success me-2"
               onClick={() => {
                 navigate("/update-profile");
               }}
             >
-              Update Profile
+            {t("update_profile")}
             </button>
             <button className="btn btn-outline-danger me-2" onClick={logout}>
-              Log Out
+            {t("logout")}
             </button>
           </div>
         </div>

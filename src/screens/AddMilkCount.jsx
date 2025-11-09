@@ -8,8 +8,10 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../Context/AppContext";
 import axios from "axios";
 import TodaysMilkCountDetailsCard from "../components/todaysMilkCoutDetailsCard.jsx";
+import { useTranslation } from "react-i18next";
 
 function AddMilkCount() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState();
   const [fat, setFat] = useState("");
@@ -28,14 +30,9 @@ function AddMilkCount() {
 
   const getTodaysMilkPrice = async () => {
     try {
-      console.log(date, userData.id);
-
       const { data } = await axios.post(
         `${backendUrl}/api/D_owner/get-todays-milkprice`,
-        {
-          date: date,
-          D_owner_id: userData.id,
-        }
+        { date, D_owner_id: userData.id }
       );
 
       if (data.success) {
@@ -45,18 +42,12 @@ function AddMilkCount() {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Error fetching price"
-      );
+      toast.error(t("error_fetch_price"));
     }
   };
 
   useEffect(() => {
-    if (date) {
-      getTodaysMilkPrice();
-    }
+    if (date) getTodaysMilkPrice();
   }, [date]);
 
   useEffect(() => {
@@ -66,7 +57,7 @@ function AddMilkCount() {
   const handleSubmit = async () => {
     await getTodaysMilkCountDetails();
     if (!date || !fat || !price || !selectedFarmer || !liters) {
-      toast.error("Please fill out all fields.");
+      toast.error(t("please_fill"));
       return;
     }
 
@@ -87,7 +78,7 @@ function AddMilkCount() {
       );
 
       if (data.success) {
-        toast.success("Milk count added successfully.");
+        toast.success(t("added_success"));
         setDate("");
         setFat("");
         setLiters("");
@@ -100,11 +91,7 @@ function AddMilkCount() {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Something went wrong."
-      );
+      toast.error(t("something_wrong"));
     } finally {
       setLoading(false);
     }
@@ -113,7 +100,6 @@ function AddMilkCount() {
   return (
     <div>
       <UserNavbar />
-
       <div className="back-arrow position-absolute top-5 start-0 p-3">
         <FontAwesomeIcon
           icon={faArrowLeft}
@@ -141,7 +127,7 @@ function AddMilkCount() {
                 }}
               >
                 <option value="" disabled>
-                  Select Farmer
+                  {t("select_farmer")}
                 </option>
                 {farmersData?.map((farmer) => (
                   <option key={farmer._id} value={farmer._id}>
@@ -149,7 +135,7 @@ function AddMilkCount() {
                   </option>
                 ))}
               </select>
-              <label htmlFor="farmerDropdown">Select Farmer</label>
+              <label>{t("select_farmer")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -158,10 +144,10 @@ function AddMilkCount() {
                 value={shift}
                 onChange={(e) => setShift(e.target.value)}
               >
-                <option value="Morning">Morning</option>
-                <option value="Evening">Evening</option>
+                <option value="Morning">{t("morning")}</option>
+                <option value="Evening">{t("evening")}</option>
               </select>
-              <label htmlFor="shiftDropdown">Select Shift</label>
+              <label>{t("select_shift")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -171,7 +157,7 @@ function AddMilkCount() {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
-              <label htmlFor="date">Date</label>
+              <label>{t("date")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -185,7 +171,7 @@ function AddMilkCount() {
                   setFat(e.target.value);
                 }}
               />
-              <label htmlFor="fat">Fat %</label>
+              <label>{t("fat")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -196,7 +182,7 @@ function AddMilkCount() {
                 value={price}
                 readOnly
               />
-              <label htmlFor="milkRate">Milk Rate</label>
+              <label>{t("milk_rate")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -207,7 +193,7 @@ function AddMilkCount() {
                 value={liters}
                 onChange={(e) => setLiters(e.target.value)}
               />
-              <label htmlFor="milkQuantity">Milk In Liters</label>
+              <label>{t("milk_in_liters")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -217,7 +203,7 @@ function AddMilkCount() {
                 value={totalValue}
                 readOnly
               />
-              <label htmlFor="totalValue">Total Value (₹)</label>
+              <label>{t("total_value")}</label>
             </div>
 
             <div className="text-center my-2">
@@ -232,16 +218,14 @@ function AddMilkCount() {
                     <PushSpinner size={30} color="white" />
                   </div>
                 ) : (
-                  "Add Data"
+                  t("add_data")
                 )}
               </button>
             </div>
           </div>
         </div>
 
-        <TodaysMilkCountDetailsCard todaysMilkdata />
-
-        <div></div>
+        <TodaysMilkCountDetailsCard todaysMilkdata={todaysMilkdata} />
       </div>
     </div>
   );

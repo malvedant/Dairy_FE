@@ -12,25 +12,26 @@ import FFarmerTenDaysCowFeed from "../FarmerData/farmerTenDaysCowFeed";
 import FFarmersEmiTransactionHistory from "../FarmerData/farmerEmiTransactionHistory";
 import FFarmersAdvancePayment from "../FarmerData/farmerAdvancePayment";
 import { AppContext } from "../../Context/AppContext";
+import { useTranslation } from "react-i18next"; // Import translation hook
 
 const FFarmerServiceCard = () => {
+  const { t } = useTranslation(); // Translation hook
   const location = useLocation();
   const navigate = useNavigate();
-  const {userData}=useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const [currentMenuIndex, setCurrentMenuIndex] = useState(0);
 
   const menuItems = [
-    { name: "Today's All Milk Collection", content: "Today's milk collection details..." },
-    { name: "Today's All CowFeed ", content: "Today's milk collection details..." },
-   
-    { name: "Milk Price History", content: "Milk price history records..." },
-    { name: "milk Collection As per Date", content: "Milk price history records..." },
-    { name: "cow Feed allocation As per Date", content: "Milk price history records..." },
-    { name: "Payment History", content: "Payment history records..." },
-    { name: "10 days Milk Collection", content: "Payment history records..." },
-    { name: "10 days cowFeed Allocation", content: "Payment history records..." },
-    { name: "Emi Transaction History", content: "Payment history records..." },
-    { name: " Advance Payments", content: "Advance payments list..." },
+    { name: t("todays_milk_collection"), content: "Today's milk collection details..." },
+    { name: t("todays_cowfeed"), content: "Today's milk collection details..." },
+    { name: t("milk_price_history"), content: "Milk price history records..." },
+    { name: t("milk_collection_date"), content: "Milk price history records..." },
+    { name: t("cow_feed_date"), content: "Milk price history records..." },
+    { name: t("payment_history"), content: "Payment history records..." },
+    { name: t("ten_days_milk"), content: "Payment history records..." },
+    { name: t("ten_days_feed"), content: "Payment history records..." },
+    { name: t("emi_history"), content: "Payment history records..." },
+    { name: t("advance_payments"), content: "Advance payments list..." },
   ];
 
   return (
@@ -55,7 +56,6 @@ const FFarmerServiceCard = () => {
 
       <div className='flex-grow-1 p-3'>
         {currentMenuIndex === 0 && <FFarmersTodayMilkCollection />}
-        
         {currentMenuIndex === 1 && <FFarmersTodayCowFeed />}
         {currentMenuIndex === 2 && <FFarmersMilkPriceHistory />}
         {currentMenuIndex === 3 && <FFarmersMilkCollectionAsPerDate />}
@@ -63,11 +63,11 @@ const FFarmerServiceCard = () => {
         {currentMenuIndex === 5 && <FFarmersPaymentHistory />}
         {currentMenuIndex === 6 && <FFarmerTenDaysMilkCollection />}
         {currentMenuIndex === 7 && <FFarmerTenDaysCowFeed />}
-        {currentMenuIndex === 8 && <FFarmersEmiTransactionHistory/>}
-        {currentMenuIndex === 9 && <FFarmersAdvancePayment/>}
+        {currentMenuIndex === 8 && <FFarmersEmiTransactionHistory />}
+        {currentMenuIndex === 9 && <FFarmersAdvancePayment />}
       </div>
     </div>
   );
 };
 
-export default FFarmerServiceCard; 
+export default FFarmerServiceCard;

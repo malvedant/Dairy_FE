@@ -19,7 +19,8 @@ import DairyData from './DairyData';
 import BillPayment from './BillPayment';
 import FarmersData from './FarmersData';
 import FarmerScreen from './FarmerScreen';
+import DairyAi from './DairyAi';
 
 
 
-export {Login,CowFeed,Contact,FarmerScreen,DairyData,FarmersData,BillPayment,UpdateCowFeed,AdvancePayment,AllocateCowFeed,UserDashBord,AddNewCowFeed,Home,Signup,UpdateProfile,AddFarmers,AddMilkCount,SetMilkPrice,OpenAccountScreen,DailyMilkCount,FarmersList}
+export {Login,DairyAi,CowFeed,Contact,FarmerScreen,DairyData,FarmersData,BillPayment,UpdateCowFeed,AdvancePayment,AllocateCowFeed,UserDashBord,AddNewCowFeed,Home,Signup,UpdateProfile,AddFarmers,AddMilkCount,SetMilkPrice,OpenAccountScreen,DailyMilkCount,FarmersList}

@@ -6,26 +6,24 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { PushSpinner } from "react-spinners-kit";
 
- // Fixed typo
 import { AppContext } from "../../Context/AppContext";
-import UserNavbar from "../UserNavbar"; // Fixed path
-import Footer from "../Footer"; // Ensure Footer is imported
+import UserNavbar from "../UserNavbar";
+import Footer from "../Footer";
 import { toast } from "react-toastify";
 
+import { useTranslation } from "react-i18next"; // ✅ Language logic
+
 function UpdateCowFeed() {
+  const { t } = useTranslation(); // ✅ useTranslation hook
   const currentDate = new Date().toISOString().split("T")[0];
   const location = useLocation();
-  const { index, visiblePin } = location.state || {}; 
+  const { index, visiblePin } = location.state || {};
 
-  const cowFeedData = JSON.parse(localStorage.getItem("cowFeedData")) || []; 
-  const cowFeedItem = cowFeedData[index] || {}; // Prevent errors
-
-  console.log("Received Index:", index); 
-  console.log("Received VisiblePin:", visiblePin);
+  const cowFeedData = JSON.parse(localStorage.getItem("cowFeedData")) || [];
+  const cowFeedItem = cowFeedData[index] || {};
 
   const [loading, setLoading] = useState(false);
   const [stock, setStock] = useState("");
-  const [price, setPrice] = useState("");
   const [date, setDate] = useState(currentDate);
 
   const navigate = useNavigate();
@@ -39,10 +37,10 @@ function UpdateCowFeed() {
       const { data } = await axios.post(
         `${backendUrl}/api/D_owner/add-cowFeed-stock`,
         {
-            cowFeed_id:cowFeedItem._id,
-          cowFeedName: cowFeedItem.cowFeedName, // Use the actual cow feed name
+          cowFeed_id: cowFeedItem._id,
+          cowFeedName: cowFeedItem.cowFeedName,
           stock,
-          price:cowFeedItem.price,
+          price: cowFeedItem.price,
           date,
           D_owner_id: userData?.id,
         }
@@ -51,7 +49,7 @@ function UpdateCowFeed() {
       setLoading(false);
       if (data.success) {
         toast.success(data.message);
-        await getCowFeedDetails(); 
+        await getCowFeedDetails();
         navigate("/cow-feed-availability");
       } else {
         toast.error(data.message);
@@ -59,7 +57,7 @@ function UpdateCowFeed() {
     } catch (error) {
       setLoading(false);
       console.error("Error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t("error_try_again")); // ✅ Translated error message
     }
   };
 
@@ -75,9 +73,8 @@ function UpdateCowFeed() {
         />
       </div>
 
-      
       <h2 className="text-start my-2 mt-5">
-        <strong>Update CowFeed Stock</strong>
+        <strong>{t("update_cowfeed_stock")}</strong> {/* ✅ Translated heading */}
       </h2>
 
       <div className="container p-3">
@@ -92,11 +89,11 @@ function UpdateCowFeed() {
               <input
                 type="text"
                 className="form-control"
-                placeholder="CowFeed Name"
+                placeholder={t("cowfeed_name")}
                 value={cowFeedItem.cowFeedName || ""}
                 readOnly
               />
-              <label>CowFeed Name</label>
+              <label>{t("cowfeed_name")}</label>
             </div>
 
             {/* Stock Input */}
@@ -104,12 +101,12 @@ function UpdateCowFeed() {
               <input
                 type="number"
                 className="form-control"
-                placeholder="CowFeed Stock"
+                placeholder={t("cowfeed_stock")}
                 value={stock}
                 onChange={(e) => setStock(e.target.value)}
                 required
               />
-              <label>CowFeed Stock</label>
+              <label>{t("cowfeed_stock")}</label>
             </div>
 
             {/* Price Input */}
@@ -117,12 +114,11 @@ function UpdateCowFeed() {
               <input
                 type="number"
                 className="form-control"
-                placeholder="CowFeed Price"
-              
+                placeholder={t("cowfeed_price")}
                 value={cowFeedItem.price || ""}
                 readOnly
               />
-              <label>CowFeed Price</label>
+              <label>{t("cowfeed_price")}</label>
             </div>
 
             {/* Submit Button */}
@@ -132,14 +128,9 @@ function UpdateCowFeed() {
                 type="submit"
                 disabled={loading}
               >
-                {loading ? <PushSpinner size={30} color="white" /> : "Update Stock"}
+                {loading ? <PushSpinner size={30} color="white" /> : t("update_stock")}
               </button>
             </div>
-          </div>
-
-          {/* Image */}
-          <div data-aos="fade-left" className="container mx-auto my-auto">
-           
           </div>
         </form>
       </div>

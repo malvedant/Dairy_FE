@@ -1,5 +1,6 @@
+import React, { useContext, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { Link, useNavigate } from 'react-router-dom';
 import loginImg from '../assetes/login.png';
 import gmail from '../assetes/gmail.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,19 +8,19 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import Footer from '../components/Footer';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { useContext, useState } from 'react';
 import api from '../api/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import getHeaders from '../api/header';
 import { PushSpinner } from 'react-spinners-kit';
 import MobileLogin from '../components/modals/mobileLogin';
 import loginImage from '../assetes/bankLogin.png';
 import Icon from 'react-icons-kit';
 import { AppContext } from '../Context/AppContext';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 function Login() {
+  const { t } = useTranslation(); // Translation hook
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -28,38 +29,29 @@ function Login() {
   const [passwordType, setPasswordType] = useState('password');
   const [icon, setIcon] = useState(eyeOff);
 
-  // Using context instead of Redux
-  const { backendUrl, setToken,userData, getUserData ,getFarmersData,getCowFeedDetails,getAllAdvancePayment} = useContext(AppContext);
+  const { backendUrl, setToken, userData, getUserData, getFarmersData, getCowFeedDetails, getAllAdvancePayment } = useContext(AppContext);
 
   // Handle login logic
   const loginHandler = async () => {
     setLoading(true);
 
     try {
-        const { data } = await axios.post(backendUrl + "/api/user/login", {
-            phone,
-            password
-        });
+      const { data } = await axios.post(backendUrl + "/api/user/login", { phone, password });
 
-        if (data.success) {
-           localStorage.setItem("authToken", data.token);
-          await getUserData(); 
-            toast.success(data.message);
-            
-    
-       
-      
-         
-        } else {
-            toast.error(data.message);
-        }
+      if (data.success) {
+        localStorage.setItem("authToken", data.token);
+        await getUserData();
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
-        console.error(error);
-        toast.error(error.response?.data?.message || "Something went wrong");
+      console.error(error);
+      toast.error(error.response?.data?.message || t("error_try_again"));
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   return (
     <div className="container-fluid position-relative">
@@ -77,18 +69,18 @@ function Login() {
                 type="number"
                 className="form-control"
                 id="floatingInput"
-                placeholder="98XXXXXXXXXX"
+                placeholder={t("mobile_number")}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
-              <label htmlFor="floatingInput">Mobile Number</label>
+              <label htmlFor="floatingInput">{t("mobile_number")}</label>
             </div>
             <div className="form-floating position-relative">
               <input
                 type={passwordType}
                 className="form-control"
                 id="floatingPassword"
-                placeholder="Password"
+                placeholder={t("password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -106,10 +98,10 @@ function Login() {
               >
                 <Icon className="absolute mr-10" icon={icon} size={25} />
               </span>
-              <label htmlFor="floatingPassword">Password</label>
+              <label htmlFor="floatingPassword">{t("password")}</label>
               <div className="text-end mt-3">
                 <Link style={{ color: 'red', textDecoration: 'none' }} to="/forgot-password">
-                  Forgotten Password?
+                  {t("forgot_password")}
                 </Link>
               </div>
             </div>
@@ -120,7 +112,7 @@ function Login() {
                     <PushSpinner size={30} color="white" />
                   </div>
                 ) : (
-                  'Log in'
+                  t("login")
                 )}
               </button>
             </div>
@@ -128,17 +120,15 @@ function Login() {
           <div>
             <hr className="w-75 mx-auto" />
             <h5 className="text-center">
-              <strong>OR</strong>
+              <strong>{t("or")}</strong>
             </h5>
             <div className="container text-center">
               <p
                 className="border mobile-login border-black btn p-2 rounded"
-                onClick={() => {
-                  setShowMobileLogin(true);
-                }}
+                onClick={() => setShowMobileLogin(true)}
               >
                 <img src={gmail} alt="" className="img-fluid gmail-logo mx-3" />
-                Log in with OTP
+                {t("login_with_otp")}
               </p>
             </div>
           </div>
@@ -148,7 +138,7 @@ function Login() {
         </div>
       </div>
 
-      <img id="signUpImage" src={loginImg} className="img-fluid position-absolute top-0 start-0 w-100 h-100" alt="Log in" style={{ zIndex: -1 }} />
+      <img id="signUpImage" src={loginImg} className="img-fluid position-absolute top-0 start-0 w-100 h-100" alt={t("login")} style={{ zIndex: -1 }} />
       <div className="d-flex justify-content-center mt-5">
         <Footer />
       </div>

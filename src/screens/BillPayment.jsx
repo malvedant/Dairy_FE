@@ -7,8 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../Context/AppContext";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function BillPayment() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [fromDate, setFromDate] = useState("");
@@ -190,7 +192,7 @@ function BillPayment() {
               onChange={(e) => setSelectedFarmer(e.target.value)}
             >
               <option value="" disabled>
-                Select Farmer
+               {t("selectFarmer")}
               </option>
               {farmersData?.map((farmer) => (
                 <option key={farmer._id} value={farmer._id}>
@@ -198,7 +200,7 @@ function BillPayment() {
                 </option>
               ))}
             </select>
-            <label>Select Farmer</label>
+            <label> {t("selectFarmer")}</label>
           </div>
 
           <div className="form-floating mb-3">
@@ -208,7 +210,7 @@ function BillPayment() {
               value={fromDate}
               onChange={(e) => setFromDate(e.target.value)}
             />
-            <label>From Date</label>
+            <label>{t("fromDateLabel")}</label>
           </div>
 
           <div className="form-floating mb-3">
@@ -218,7 +220,7 @@ function BillPayment() {
               value={toDate}
               onChange={(e) => setToDate(e.target.value)}
             />
-            <label>To Date</label>
+            <label>{t("toDateLabel")}</label>
           </div>
 
           <div className="text-center my-2 d-flex gap-4">
@@ -231,7 +233,7 @@ function BillPayment() {
                 {loading ? (
                   <PushSpinner size={30} color="white" />
                 ) : (
-                  "Make Transaction Bill"
+                 t("makeTransactionBill")
                 )}
               </button>
             )}
@@ -246,7 +248,7 @@ function BillPayment() {
                   {paymentLoading ? (
                     <PushSpinner size={30} color="white" />
                   ) : (
-                    "Make Payment"
+                     t("makePaymentBtn")
                   )}
                 </button>
 
@@ -258,7 +260,7 @@ function BillPayment() {
                   {sendMailLoading ? (
                     <PushSpinner size={30} color="white" />
                   ) : (
-                    "Send Mail"
+                    t("sendMailBtn")
                   )}
                 </button>
               </div>
@@ -272,29 +274,30 @@ function BillPayment() {
           className="col-md-6 bg-white"
           style={{ maxHeight: "400px", overflowY: "auto", width: "40%" }}
         >
-          <h5 className="text-left mb-3">Farmer Name : {final_farmer}</h5>
+          <h5 className="text-left mb-3"> {t("farmerNameLabel")} : {final_farmer}</h5>
 
           <h6 className="text-center mb-3">
             {" "}
-            Transaction Report from {startDate} to {endDate}
+             {t("transactionReport")} {startDate} {t("to")} {endDate}
           </h6>
 
-          <h5 className="text-left mb-3">Milk Transactions</h5>
+          <h5 className="text-left mb-3">{t("milkTransactionsLabel")}</h5>
           {milkTransactions.length > 0 ? (
             <div className="table-responsive p-2">
               <table className="table table-bordered table-striped table-sm">
                 <thead className="table-dark">
                   <tr>
-                    <th style={{ width: "20%", whiteSpace: "nowrap" }}>Date</th>
-                    <th style={{ width: "15%", whiteSpace: "nowrap" }}>Fat</th>
+                    <th style={{ width: "20%", whiteSpace: "nowrap" }}>{t("date")}</th>
+                    <th style={{ width: "15%", whiteSpace: "nowrap" }}>{t("fat")}</th>
                     <th style={{ width: "15%", whiteSpace: "nowrap" }}>
-                      Price
+                      {t("price")}
                     </th>
                     <th style={{ width: "15%", whiteSpace: "nowrap" }}>
-                      Liters
+                    {t("liters")}
                     </th>
                     <th style={{ width: "20%", whiteSpace: "nowrap" }}>
-                      Total Value
+                     
+                      {t("total_value")}
                     </th>
                   </tr>
                 </thead>
@@ -323,32 +326,53 @@ function BillPayment() {
                         fontSize: "16px",
                       }}
                     >
-                      Final Total Milk Price: ₹{total_MilkPrice}
+                       {t("final_total_milk_price")}  ₹{total_MilkPrice}
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           ) : (
-            <p className="text-center text-muted">No transactions found.</p>
+            <p className="text-center text-muted"> {t(" no_transactions_found")} </p>
           )}
 
-          <h5 className="text-left mb-3">Cow Feed Transactions</h5>
+ {/* "milkTransactions": "Milk Transactions",
+  "cowFeedTransactions": "Cow Feed Transactions",
+  "emiTransaction": "EMI Transaction",
+  "date": "Date",
+  "fat": "Fat",
+  "price": "Price",
+  "liters": "Liters",
+  "totalValue": "Total Value",
+  "feedName": "Feed Name",
+  "bags": "Bags",
+  "installment": "Installment",
+  "emi": "EMI",
+  "totalPaid": "Total Paid",
+  "remaining": "Remaining",
+  "noTransactions": "No transactions found",
+  "finalTotalMilkPrice": "Final Total Milk Price",
+  "finalTotalCowFeedPrice": "Final Total CowFeed Price",
+  "finalValue": "Final Value" */}
+
+
+
+          <h5 className="text-left mb-3">  {t("cowFeedTransactionsLabel")}</h5>
           {cowFeedTransactions.length > 0 ? (
             <div className="table-responsive p-2">
               <table className="table table-bordered table-striped table-sm">
                 <thead className="table-dark">
                   <tr>
-                    <th style={{ width: "20%", whiteSpace: "nowrap" }}>Date</th>
+                    <th style={{ width: "20%", whiteSpace: "nowrap" }}>{t("date")}</th>
                     <th style={{ width: "25%", whiteSpace: "nowrap" }}>
-                      Feed Name
+                      {t("feedName")}
                     </th>
-                    <th style={{ width: "10%", whiteSpace: "nowrap" }}>Bags</th>
+                    <th style={{ width: "10%", whiteSpace: "nowrap" }}>  {t("bags")}</th>
                     <th style={{ width: "15%", whiteSpace: "nowrap" }}>
-                      Price
+                      {t("price")}
                     </th>
                     <th style={{ width: "20%", whiteSpace: "nowrap" }}>
-                      Total Value
+                      {t("totalValue")}
                     </th>
                   </tr>
                 </thead>
@@ -378,17 +402,17 @@ function BillPayment() {
                         fontSize: "16px",
                       }}
                     >
-                      Final Total CowFeed Price: ₹{total_CowFeedPrice}
+                      {t("finalTotalCowFeedPrice ")} : ₹{total_CowFeedPrice}
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           ) : (
-            <p className="text-center text-muted">No transactions found.</p>
+            <p className="text-center text-muted">  {t(" no_transactions_found")} </p>
           )}
 
-          <h5> Emi Transaction </h5>
+          <h5> {t("emiTransactionLabel")}   </h5>
 
           {emiTransactions.length > 0 ? (
             <div
@@ -408,7 +432,7 @@ function BillPayment() {
                         textAlign: "center",
                       }}
                     >
-                      Date
+                  {t("date")}
                     </th>
                     <th
                       style={{
@@ -417,7 +441,7 @@ function BillPayment() {
                         textAlign: "center",
                       }}
                     >
-                      Installment{" "}
+                    {t("Installment")} {" "}
                     </th>
                     <th
                       style={{
@@ -426,7 +450,7 @@ function BillPayment() {
                         textAlign: "center",
                       }}
                     >
-                      EMI
+                   {t("emi")}  
                     </th>
                     <th
                       style={{
@@ -435,7 +459,7 @@ function BillPayment() {
                         textAlign: "center",
                       }}
                     >
-                      Total Paid
+                    {t("total_paid")}  
                     </th>
                     <th
                       style={{
@@ -444,7 +468,7 @@ function BillPayment() {
                         textAlign: "center",
                       }}
                     >
-                      Remaining
+                     {t("remaining")} 
                     </th>
                   </tr>
                 </thead>
@@ -475,11 +499,11 @@ function BillPayment() {
           )}
 
           <h5>
-            Final Value=₹{total_MilkPrice}-{total_CowFeedPrice}-{emi}
+           {t("finalValueLabel")}    ₹{total_MilkPrice}-{total_CowFeedPrice}-{emi}
           </h5>
 
           <h4 className="" style={{ textAlign: "center" }}>
-            Final Value :₹{final_Price}{" "}
+          {t("finalValueLabel")}  :₹{final_Price}{" "}
           </h4>
         </div>
       </div>

@@ -1,31 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { AppContext } from "../Context/AppContext";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const TodaysCowFeedDataCard = () => {
-  const { getTodaysCowFeedDetails, todaysCowFeedData, userData,totalCowFeedBags,totalCowFeedPrice } = useContext(AppContext);
-
- 
-
- 
+  const { t } = useTranslation();
+  const { getTodaysCowFeedDetails, todaysCowFeedData, totalCowFeedBags, totalCowFeedPrice } = useContext(AppContext);
 
   useEffect(() => {
     getTodaysCowFeedDetails();
-  
-  }, []); // Fix: Update dependency to prevent unnecessary re-renders
+  }, []);
 
   return (
     <div className="container d-flex flex-column gap-2 rounded shadow p-3 border border-none vh-100">
       <div className="text-center">
         <h2>
-          <strong>Today's Allocated Cow Feed</strong>
+          <strong>{t("todays_cow_feed")}</strong>
         </h2>
         <h5>
-          Total CowFeed Bags: <strong>{totalCowFeedBags} Bags</strong>
+          {t("total_cowfeed_bags")}: <strong>{totalCowFeedBags} Bags</strong>
         </h5>
         <h5>
-          Total CowFeed Price: <strong>₹{totalCowFeedPrice}</strong>
+          {t("total_cowfeed_price")}: <strong>₹{totalCowFeedPrice}</strong>
         </h5>
       </div>
       <div className="d-flex flex-column gap-3">
@@ -36,24 +31,24 @@ const TodaysCowFeedDataCard = () => {
               className="d-flex w-full rounded shadow p-2 gap-1 border border-none"
             >
               <p>
-                Farmer Name: <strong>{data.farmerName || "N/A"}</strong>
+                {t("farmer_name")}: <strong>{data.farmerName || "N/A"}</strong>
               </p>
               <p>
-                Cow Feed Name: <strong>{data.cowFeedName || "N/A"}</strong>
+                {t("cow_feed_name")}: <strong>{data.cowFeedName || "N/A"}</strong>
               </p>
               <p>
-                Price: <strong>{data.price || "N/A"}</strong>
+                {t("price")}: <strong>{data.price || "N/A"}</strong>
               </p>
               <p>
-                Allocated Bags: <strong>{data.allocated_bags || "N/A"}</strong>
+                {t("allocated_bags")}: <strong>{data.allocated_bags || "N/A"}</strong>
               </p>
               <p>
-                Total Price: <strong>{data.total_cowFeed_price || "N/A"}</strong>
+                {t("total_price")}: <strong>{data.total_cowFeed_price || "N/A"}</strong>
               </p>
             </div>
           ))
         ) : (
-          <p>No cow feed transaction data available.</p>
+          <p>{t("no_data")}</p>
         )}
       </div>
     </div>

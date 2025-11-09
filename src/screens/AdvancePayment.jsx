@@ -8,6 +8,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../Context/AppContext";
 import axios from "axios";
 import AdvancePaymentCard from "../components/AdvancePaymentCard.jsx";
+import { useTranslation } from "react-i18next"; // ✅ added for multilanguage support
 
 function AdvancePayment() {
   const [loading, setLoading] = useState(false);
@@ -19,25 +20,28 @@ function AdvancePayment() {
   const [selectedFarmer, setSelectedFarmer] = useState("");
   const [farmerName, setFarmerName] = useState("");
 
-  const { backendUrl, userData, farmersData,getAllAdvancePayment } = useContext(AppContext);
+  const { backendUrl, userData, farmersData, getAllAdvancePayment } =
+    useContext(AppContext);
   const navigate = useNavigate();
+
+  const { t } = useTranslation(); // ✅ translation hook
 
   // Set the current date when the component mounts
   useEffect(() => {
     setDate(new Date().toISOString().split("T")[0]);
   }, []);
 
-  // Calculate monthly EMI
- // Calculate monthly EMI (rounded to 2 decimal places)
-useEffect(() => {
+  // Calculate monthly EMI (rounded to 2 decimal places)
+  useEffect(() => {
     if (advancePayment && year) {
-      const emi = (parseFloat(advancePayment) || 0) / ((parseFloat(year) * 36.5) || 1);
+      const emi =
+        (parseFloat(advancePayment) || 0) /
+        ((parseFloat(year) * 36.5) || 1);
       setMonthlyEmi(emi.toFixed(2)); // Rounds to 2 decimal places
     } else {
       setMonthlyEmi(null);
     }
   }, [year, advancePayment]);
-  
 
   // Calculate EMI Expiry Date
   useEffect(() => {
@@ -50,24 +54,27 @@ useEffect(() => {
 
   const handleSubmit = async () => {
     if (!date || !advancePayment || !monthlyEmi || !selectedFarmer || !year) {
-      toast.error("Please fill out all fields.");
+      toast.error(t("fillAllFields")); // ✅ translated
       return;
     }
 
     setLoading(true);
     try {
-      const { data } = await axios.post(`${backendUrl}/api/D_owner/make-advance-payment`, {
-        date,
-        year,
-        advancePayment,
-        monthlyEmi,
-        emiExpireDate,
-        D_owner_id: userData.id,
-        farmer_id: selectedFarmer,
-      });
+      const { data } = await axios.post(
+        `${backendUrl}/api/D_owner/make-advance-payment`,
+        {
+          date,
+          year,
+          advancePayment,
+          monthlyEmi,
+          emiExpireDate,
+          D_owner_id: userData.id,
+          farmer_id: selectedFarmer,
+        }
+      );
 
       if (data.success) {
-       await getAllAdvancePayment();
+        await getAllAdvancePayment();
         toast.success(data.message);
         setDate(new Date().toISOString().split("T")[0]);
         setAdvancePayment(null);
@@ -80,7 +87,11 @@ useEffect(() => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || error?.message || "Something went wrong.");
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          t("errorMsg") // ✅ translated fallback
+      );
     } finally {
       setLoading(false);
     }
@@ -90,7 +101,12 @@ useEffect(() => {
     <div>
       <UserNavbar />
       <div className="back-arrow position-absolute top-5 start-0 p-3">
-        <FontAwesomeIcon icon={faArrowLeft} size="2x" onClick={() => navigate(-1)} style={{ cursor: "pointer" }} />
+        <FontAwesomeIcon
+          icon={faArrowLeft}
+          size="2x"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        />
       </div>
 
       <ToastContainer />
@@ -104,13 +120,15 @@ useEffect(() => {
                 className="form-select"
                 value={selectedFarmer}
                 onChange={(e) => {
-                  const selected = farmersData.find((farmer) => farmer._id === e.target.value);
+                  const selected = farmersData.find(
+                    (farmer) => farmer._id === e.target.value
+                  );
                   setSelectedFarmer(e.target.value);
                   setFarmerName(selected ? selected.name : "");
                 }}
               >
                 <option value="" disabled>
-                  Select Farmer
+                  {t("selectFarmer")}
                 </option>
                 {farmersData?.map((farmer) => (
                   <option key={farmer._id} value={farmer._id}>
@@ -118,7 +136,7 @@ useEffect(() => {
                   </option>
                 ))}
               </select>
-              <label htmlFor="farmerDropdown">Select Farmer</label>
+              <label htmlFor="farmerDropdown">{t("selectFarmerLabel")}</label>
             </div>
 
             {/* Advance Payment Field */}
@@ -126,17 +144,17 @@ useEffect(() => {
               <input
                 type="number"
                 className="form-control"
-                placeholder="Amount "
+                placeholder={t("advanceAmountPlaceholder")}
                 value={advancePayment || ""}
                 onChange={(e) => setAdvancePayment(e.target.value)}
               />
-              <label htmlFor="advancePayment">Advance Amount</label>
+              <label htmlFor="advancePayment">{t("advanceAmountLabel")}</label>
             </div>
 
             {/* Date Field (Auto-set to current date) */}
             <div className="form-floating mb-3">
               <input type="date" className="form-control" value={date} readOnly />
-              <label htmlFor="date">Date</label>
+              <label htmlFor="date">{t("dateLabel")}</label>
             </div>
 
             {/* Year Field */}
@@ -144,23 +162,34 @@ useEffect(() => {
               <input
                 type="number"
                 className="form-control"
-                placeholder="Year"
+                placeholder={t("yearPlaceholder")}
                 value={year || ""}
                 onChange={(e) => setYear(e.target.value)}
               />
-              <label htmlFor="year">Year</label>
+              <label htmlFor="year">{t("yearLabel")}</label>
             </div>
 
             {/* Monthly EMI Field (Read-Only) */}
             <div className="form-floating mb-3">
-              <input type="number" className="form-control" placeholder="Monthly EMI" readOnly value={monthlyEmi || ""} />
-              <label htmlFor="monthlyEmi">Monthly EMI</label>
+              <input
+                type="number"
+                className="form-control"
+                placeholder={t("monthlyEmiPlaceholder")}
+                readOnly
+                value={monthlyEmi || ""}
+              />
+              <label htmlFor="monthlyEmi">{t("monthlyEmiLabel")}</label>
             </div>
 
             {/* EMI Expiry Date (Auto-calculated) */}
             <div className="form-floating mb-3">
-              <input type="date" className="form-control" readOnly value={emiExpireDate || ""} />
-              <label htmlFor="emiExpireDate">EMI Expiry Date</label>
+              <input
+                type="date"
+                className="form-control"
+                readOnly
+                value={emiExpireDate || ""}
+              />
+              <label htmlFor="emiExpireDate">{t("emiExpiryDateLabel")}</label>
             </div>
 
             {/* Submit Button */}
@@ -176,15 +205,14 @@ useEffect(() => {
                     <PushSpinner size={30} color="white" />
                   </div>
                 ) : (
-                  "Add Data"
+                  t("addDataBtn")
                 )}
               </button>
             </div>
           </div>
         </div>
 
-       <AdvancePaymentCard/>
-
+        <AdvancePaymentCard />
       </div>
     </div>
   );

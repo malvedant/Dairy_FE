@@ -2,23 +2,22 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../Context/AppContext";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const CowFeedAllocationAsPerDateCard = () => {
-  const {  userData } = useContext(AppContext);
+  const { t } = useTranslation();
+  const { userData } = useContext(AppContext);
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [cowFeedData, setCowFeedData] = useState([]);
-  
   const [totalCowFeedBags, setTotalCowFeedBags] = useState(0);
   const [totalCowFeedPrice, setTotalCowFeedPrice] = useState(0);
-  
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      console.log("Fetching milk data for date:", date);
       const { data } = await axios.post(
-       'http://localhost:4000/api/D_owner/get-All-cowfeed-transactions-asper-date',
+        "http://localhost:4000/api/D_owner/get-All-cowfeed-transactions-asper-date",
         { D_owner_id: userData.id, date }
       );
 
@@ -27,7 +26,7 @@ const CowFeedAllocationAsPerDateCard = () => {
         toast.success(data.message);
         setCowFeedData(data.data);
       } else {
-        toast.error("No data found for this date.");
+        toast.error(t("no_cowfeed_data"));
       }
     } catch (error) {
       toast.error(error.message);
@@ -35,12 +34,13 @@ const CowFeedAllocationAsPerDateCard = () => {
       setLoading(false);
     }
   };
+
   const calculatedTotalCowFeedAndPrice = async () => {
     try {
-      const { data } = await axios.post("http://localhost:4000/api/D_owner/calculate-todays-cowFeed-price-bags", {
-        D_owner_id: userData.id,
-        date,
-      });
+      const { data } = await axios.post(
+        "http://localhost:4000/api/D_owner/calculate-todays-cowFeed-price-bags",
+        { D_owner_id: userData.id, date }
+      );
       if (data.success) {
         setTotalCowFeedBags(data.totalAllocatedBags);
         setTotalCowFeedPrice(data.totalcowFeedPrice);
@@ -49,7 +49,6 @@ const CowFeedAllocationAsPerDateCard = () => {
       toast.error(error.message);
     }
   };
-
 
   return (
     <div className="container min-vh-100">
@@ -62,7 +61,7 @@ const CowFeedAllocationAsPerDateCard = () => {
           onChange={(e) => setDate(e.target.value)}
           disabled={loading}
         />
-        <label htmlFor="date">Select Date</label>
+        <label htmlFor="date">{t("select_date")}</label>
       </div>
 
       {/* Search Button */}
@@ -73,48 +72,51 @@ const CowFeedAllocationAsPerDateCard = () => {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? "Loading..." : "Search"}
+          {loading ? "Loading..." : t("search")}
         </button>
       </div>
 
-      {/* Milk Collection Data */}
+      {/* Cow Feed Collection Data */}
       <div className="container p-3">
         <h2 className="text-center">
-          <strong>Cow Feed allocation - {date || "Select a Date"}</strong>
+          <strong>
+            {t("cow_feed_allocation")} - {date || t("select_date")}
+          </strong>
         </h2>
-        <h5>Total CowFeed Bags: <strong><span id="totalMilkCount">{totalCowFeedBags}</span> Bags</strong></h5>
-        <h5>Total CowFeed Price: <strong><span id="totalMilkCount"> ₹{totalCowFeedPrice}</span> </strong></h5>
-        <div className="d-flex flex-column gap-3 ">
-        {cowFeedData.length > 0 ? (
-          cowFeedData.map((data, index) => (
-            <div
-              key={index}
-              className=" d-flex  w-full rounded shadow p-2 gap-1 border border-none"
-            >
-              <p>
-                farmer Name: <strong> {data.farmerName || "N/A"}</strong>{" "}
-              </p>
-              <p>
-                {" "}
-                cowFeedName: <strong> {data.cowFeedName || "N/A"}</strong>
-              </p>
-              <p>
-                {" "}
-                Price: <strong> {data.price || "N/A"}</strong>
-              </p>
-              <p>
-                allocated bags: <strong> {data.allocated_bags || "N/A"}</strong>
-              </p>
-              <p>
-                Total Price:{" "}
-                <strong> {data.total_cowFeed_price || "N/A"}</strong>
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No cowFeed Transaction data available.</p>
-        )}
-      </div>
+        <h5>
+          {t("total_cowfeed_bags")}: <strong>{totalCowFeedBags} Bags</strong>
+        </h5>
+        <h5>
+          {t("total_cowfeed_price")}: <strong>₹{totalCowFeedPrice}</strong>
+        </h5>
+        <div className="d-flex flex-column gap-3">
+          {cowFeedData.length > 0 ? (
+            cowFeedData.map((data, index) => (
+              <div
+                key={index}
+                className="d-flex w-full rounded shadow p-2 gap-1 border border-none"
+              >
+                <p>
+                  {t("farmer_name")}: <strong>{data.farmerName || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("cowfeed_name")}: <strong>{data.cowFeedName || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("price")}: <strong>{data.price || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("allocated_bags")}: <strong>{data.allocated_bags || "N/A"}</strong>
+                </p>
+                <p>
+                  {t("total_price")}: <strong>{data.total_cowFeed_price || "N/A"}</strong>
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>{t("no_cowfeed_data")}</p>
+          )}
+        </div>
       </div>
     </div>
   );

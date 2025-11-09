@@ -10,8 +10,10 @@ import { PushSpinner } from 'react-spinners-kit';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../Context/AppContext';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 function MobileLogin({ visiblePin, setVisiblePin }) {
+    const { t } = useTranslation(); // Translation hook
     const { backendUrl, setToken, getUserData, getFarmersData,getCowFeedDetails,getAllAdvancePayment} = useContext(AppContext);
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
@@ -28,17 +30,13 @@ function MobileLogin({ visiblePin, setVisiblePin }) {
 
             if (data.success) {
                 toast.success(data.message);
-                
-                // setToken(data.token); 
                 localStorage.setItem("authToken",data.token);
-                console.log(data.token);
-               await getUserData();
-                
+                await getUserData();
             } else {
                 toast.error(data.message);
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "An error occurred");
+            toast.error(error.response?.data?.message || t("error_try_again"));
         } finally {
             setLoading(false);
         }
@@ -57,7 +55,7 @@ function MobileLogin({ visiblePin, setVisiblePin }) {
                 toast.error(data.message);
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "An error occurred");
+            toast.error(error.response?.data?.message || t("error_try_again"));
         } finally {
             setSendOtploading(false);
         }
@@ -79,29 +77,29 @@ function MobileLogin({ visiblePin, setVisiblePin }) {
                                 <input
                                     type="email"
                                     className="form-control"
-                                    placeholder="Email"
+                                    placeholder={t("email")}
                                     readOnly={sendOtp}
                                     onChange={(e) => setEmail(e.target.value.trim())}
                                 />
-                                <label>Email</label>
+                                <label>{t("email")}</label>
                             </div>
                             <button
                                 className="btn btn-success align-self-end my-1"
                                 disabled={sendOtp}
                                 onClick={sendOtpForm}
                             >
-                                {sendOtploading ? <PushSpinner size={30} color="white" /> : 'Send OTP'}
+                                {sendOtploading ? <PushSpinner size={30} color="white" /> : t("send_otp")}
                             </button>
                         </div>
                         <div className="form-floating mb-3">
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="OTP"
+                                placeholder={t("otp")}
                                 readOnly={!sendOtp}
                                 onChange={(e) => setOtp(e.target.value.trim())}
                             />
-                            <label>OTP</label>
+                            <label>{t("otp")}</label>
                         </div>
                         <div className="text-center mt-4">
                             <button
@@ -109,14 +107,14 @@ function MobileLogin({ visiblePin, setVisiblePin }) {
                                 disabled={!sendOtp}
                                 onClick={submitForm}
                             >
-                                {loading ? <PushSpinner size={30} color="white" /> : 'Log in'}
+                                {loading ? <PushSpinner size={30} color="white" /> : t("login")}
                             </button>
                         </div>
                     </div>
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setVisiblePin(false)}>
-                        Close
+                        {t("close")}
                     </CButton>
                 </CModalFooter>
             </CModal>

@@ -10,23 +10,26 @@ import api from "../api/api";
 import { PushSpinner } from "react-spinners-kit";
 import { AppContext } from "../Context/AppContext";
 import axios from "axios";
+import { useTranslation } from "react-i18next"; // ✅ Import translation hook
 
 function Signup() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { backendUrl } = useContext(AppContext); // Assuming backendUrl is being passed from context
+  const { backendUrl } = useContext(AppContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+  const { t } = useTranslation(); // ✅ initialize translation
 
-    setLoading(true); // Start loading spinner
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
     try {
-      const D_owner_id="ownid";
+      const D_owner_id = "ownid";
       const { data } = await axios.post(backendUrl + "/api/user/register", {
         name,
         email,
@@ -35,17 +38,18 @@ function Signup() {
         role,
         D_owner_id,
       });
-      setLoading(false); // Stop loading spinner
+
+      setLoading(false);
 
       if (data.success) {
         toast.success(data.message);
-        navigate("/"); // Navigate to home page after successful registration
+        navigate("/");
       } else {
-        toast.error(data.message); // Show error message if registration failed
+        toast.error(data.message);
       }
     } catch (error) {
-      setLoading(false); // Stop loading spinner
-      toast.error("Something went wrong. Please try again.");
+      setLoading(false);
+      toast.error(t("error_try_again")); // ✅ translated error message
     }
   };
 
@@ -62,13 +66,13 @@ function Signup() {
       </div>
       <ToastContainer />
       <h2 className="text-start my-2 mt-5">
-        <strong>Hey User, Fill the Signup Form Below</strong>
+        <strong>{t("signup_heading")}</strong>
       </h2>
       <div className="container p-3">
         <form
           className="d-flex p-3 container rounded position-relative"
           style={{ zIndex: 2 }}
-          onSubmit={onSubmitHandler} // Handle form submission
+          onSubmit={onSubmitHandler}
         >
           <div data-aos="fade-right" className="container col-md-7">
             <div className="form-floating mb-3">
@@ -76,11 +80,11 @@ function Signup() {
                 type="text"
                 className="form-control"
                 id="fName"
-                placeholder="Name"
+                placeholder={t("name")}
                 value={name}
-                onChange={(e) => setName(e.target.value)} // Update name state
+                onChange={(e) => setName(e.target.value)}
               />
-              <label htmlFor="fName"> Name</label>
+              <label htmlFor="fName">{t("name")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -88,11 +92,11 @@ function Signup() {
                 type="number"
                 className="form-control"
                 id="mobileNumber"
-                placeholder="Mobile Number"
+                placeholder={t("mobile_number")}
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)} // Update phone state
+                onChange={(e) => setPhone(e.target.value)}
               />
-              <label htmlFor="mobileNumber">Mobile Number</label>
+              <label htmlFor="mobileNumber">{t("mobile_number")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -100,11 +104,11 @@ function Signup() {
                 type="email"
                 className="form-control"
                 id="email"
-                placeholder="Email Id"
+                placeholder={t("email")}
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} // Update email state
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <label htmlFor="email">Email Id</label>
+              <label htmlFor="email">{t("email")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -112,11 +116,11 @@ function Signup() {
                 type="password"
                 className="form-control"
                 id="password"
-                placeholder="Set Password"
+                placeholder={t("password")}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} // Update password state
+                onChange={(e) => setPassword(e.target.value)}
               />
-              <label htmlFor="password">Set Password</label>
+              <label htmlFor="password">{t("password")}</label>
             </div>
 
             <div className="form-floating mb-3">
@@ -124,20 +128,19 @@ function Signup() {
                 className="form-control"
                 id="role"
                 value={role}
-                onChange={(e) => setRole(e.target.value)} // Update role state
+                onChange={(e) => setRole(e.target.value)}
               >
                 <option value="" disabled>
-                  Select Role
+                  {t("select_role")}
                 </option>
-               
-                <option value="dairy-owner">Dairy Owner</option>
+                <option value="dairy-owner">{t("dairy_owner")}</option>
               </select>
-              <label htmlFor="role">Select Role</label>
+              <label htmlFor="role">{t("select_role")}</label>
             </div>
 
             <p className="text-end">
               <Link to="/" style={{ color: "red", textDecoration: "none" }}>
-                Already Have an Account?
+                {t("already_account")}
               </Link>
             </p>
 
@@ -145,19 +148,23 @@ function Signup() {
               <button
                 id="signupButton"
                 className="btn btn-success w-75 text-center"
-                type="submit" // Use type="submit" to trigger form submission
+                type="submit"
               >
                 {loading ? (
                   <div className="container d-flex justify-content-center align-items-center">
                     <PushSpinner size={30} color="white" />
                   </div>
                 ) : (
-                  "Sign Up"
+                  t("sign_up")
                 )}
               </button>
             </div>
           </div>
-          <div data-aos="fade-left" className="container mx-auto my-auto loginImageContainer">
+
+          <div
+            data-aos="fade-left"
+            className="container mx-auto my-auto loginImageContainer"
+          >
             <img
               id="signUpImage"
               src={signupImg}

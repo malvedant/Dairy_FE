@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import getHeaders from '../api/header';
-
+import { useTranslation } from "react-i18next"; // ✅ added
 
 function DailyMilkCount() {
     const [loading, setLoading] = useState(false);
@@ -25,6 +25,7 @@ function DailyMilkCount() {
     });
 
     const navigate = useNavigate();
+    const { t } = useTranslation(); // ✅ translation hook
 
     useEffect(() => {
         fetchUsers();
@@ -36,41 +37,41 @@ function DailyMilkCount() {
             const tempData = response.data?.data || [];
             setUsers(tempData);
         } catch (e) {
-            toast.error(e.response?.data?.message || 'Failed to fetch users.');
+            toast.error(e.response?.data?.message || t("failedFetchUsers"));
         }
     };
 
-    const handleSubmit =async () => {
+    const handleSubmit = async () => {
         if (!selectedFarmer || !userData.date || !userData.milk_rate || !userData.milk_quantity) {
-            toast.error('Please fill out all fields.');
+            toast.error(t("fillAllFields"));
             return;
         }
-        setLoading(true)
-        const response = await api.post(
+        setLoading(true);
+        await api.post(
             'milk/add/',
             {
-                'mobile':selectedFarmer,'shift':shift,'date':userData.date,'rate':userData.milk_rate,'quantity':userData.milk_quantity,
+                'mobile': selectedFarmer,
+                'shift': shift,
+                'date': userData.date,
+                'rate': userData.milk_rate,
+                'quantity': userData.milk_quantity,
                 getHeaders,
-              }
-        ).then((response)=>{
-            // alert(response.data.message)
+            }
+        ).then((response) => {
             toast.success(response.data.message);
-            setUserData(
-                {
-                    username: '',
-                    date: '',
-                    milk_rate: '',
-                    milk_quantity: '',
-                    time: '',
-                    role: 'user',
-                }
-            )
-        }).catch((err)=>{
-            toast.error(err);
-        }).finally(()=>{
-            setLoading(false)
-        })
-       
+            setUserData({
+                username: '',
+                date: '',
+                milk_rate: '',
+                milk_quantity: '',
+                time: '',
+                role: 'user',
+            });
+        }).catch((err) => {
+            toast.error(err.message || t("failedSubmit"));
+        }).finally(() => {
+            setLoading(false);
+        });
     };
 
     return (
@@ -83,7 +84,6 @@ function DailyMilkCount() {
             <div className="shadow rounded m-4 p-4 d-flex flex-row">
                 <div className="container">
                     <div className="container col-md-7">
-                     
                         <div className="form-floating mb-3">
                             <select
                                 className="form-select"
@@ -91,27 +91,26 @@ function DailyMilkCount() {
                                 value={selectedFarmer}
                                 onChange={(e) => setSelectedFarmer(e.target.value)}
                             >
-                                <option value="">Select Farmer</option>
+                                <option value="">{t("selectFarmer")}</option>
                                 {users.map((user) => (
                                     <option key={user.phone_number} value={user.phone_number}>
                                         {user.first_name} {user.last_name} ({user.role})
                                     </option>
                                 ))}
                             </select>
-                            <label htmlFor="farmerDropdown">Select Farmer</label>
+                            <label htmlFor="farmerDropdown">{t("selectFarmerLabel")}</label>
                         </div>
 
-                      
                         <div className="form-floating mb-3">
                             <select
                                 className="form-select"
                                 value={shift}
                                 onChange={(e) => setShift(e.target.value)}
                             >
-                                <option value="M">Morning</option>
-                                <option value="E">Evening</option>
+                                <option value="M">{t("morning")}</option>
+                                <option value="E">{t("evening")}</option>
                             </select>
-                            <label htmlFor="farmerDropdown">Select Shift</label>
+                            <label htmlFor="farmerDropdown">{t("selectShift")}</label>
                         </div>
 
                         <div className="form-floating mb-3">
@@ -121,34 +120,31 @@ function DailyMilkCount() {
                                 value={userData.date}
                                 onChange={(e) => setUserData({ ...userData, date: e.target.value })}
                             />
-                            <label htmlFor="date">Date</label>
+                            <label htmlFor="date">{t("dateLabel")}</label>
                         </div>
 
-                     
                         <div className="form-floating mb-3">
                             <input
                                 type="number"
                                 className="form-control"
-                                placeholder="Milk Rate"
+                                placeholder={t("milkRatePlaceholder")}
                                 value={userData.milk_rate}
                                 onChange={(e) => setUserData({ ...userData, milk_rate: e.target.value })}
                             />
-                            <label htmlFor="milkRate">Milk Rate</label>
+                            <label htmlFor="milkRate">{t("milkRateLabel")}</label>
                         </div>
 
-                      
                         <div className="form-floating mb-3">
                             <input
                                 type="number"
                                 className="form-control"
-                                placeholder="Milk In Liters"
+                                placeholder={t("milkLitersPlaceholder")}
                                 value={userData.milk_quantity}
                                 onChange={(e) => setUserData({ ...userData, milk_quantity: e.target.value })}
                             />
-                            <label htmlFor="milkQuantity">Milk In Liters</label>
+                            <label htmlFor="milkQuantity">{t("milkLitersLabel")}</label>
                         </div>
 
-                     
                         <div className="text-center my-2">
                             <button
                                 id="submitButton"
@@ -161,14 +157,13 @@ function DailyMilkCount() {
                                         <PushSpinner size={30} color="white" />
                                     </div>
                                 ) : (
-                                    'Add Data'
+                                    t("addDataBtn")
                                 )}
                             </button>
                         </div>
                     </div>
                 </div>
 
-             
                 <div className="container">
                     <img id="signUpImage" src={setPriceIcon} className="img-fluid" alt="Set Price Background" />
                 </div>

@@ -8,10 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../Context/AppContext";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function SetMilkPrice() {
   const navigate = useNavigate();
   const { backendUrl, userData } = useContext(AppContext);
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
@@ -35,12 +37,12 @@ function SetMilkPrice() {
           setPrice("");
         }
       } catch (error) {
-        toast.error(error.response?.data?.message || "Error fetching data.");
+        toast.error(error.response?.data?.message || t("error_fetching_data"));
       }
     };
 
     if (date) getData();
-  }, [date]);
+  }, [date, backendUrl, userData, t]);
 
   const handleError = (error, defaultMessage) => {
     toast.error(error.response?.data?.message || defaultMessage);
@@ -48,7 +50,7 @@ function SetMilkPrice() {
 
   const handleSubmit = async () => {
     if (!date || !price) {
-      toast.error("Please fill out all fields.");
+      toast.error(t("fill_all_fields"));
       return;
     }
 
@@ -66,7 +68,7 @@ function SetMilkPrice() {
         toast.error(data.message);
       }
     } catch (error) {
-      handleError(error, "Failed to set milk price.");
+      handleError(error, t("failed_set_price"));
     } finally {
       setLoading(false);
     }
@@ -74,7 +76,7 @@ function SetMilkPrice() {
 
   const handleEdit = async () => {
     if (!date || !price) {
-      toast.error("Please fill out all fields.");
+      toast.error(t("fill_all_fields"));
       return;
     }
 
@@ -92,7 +94,7 @@ function SetMilkPrice() {
         toast.error(data.message);
       }
     } catch (error) {
-      handleError(error, "Failed to edit milk price.");
+      handleError(error, t("failed_edit_price"));
     } finally {
       setLoading(false);
     }
@@ -119,7 +121,7 @@ function SetMilkPrice() {
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
-            <label>Date</label>
+            <label>{t("date")}</label>
           </div>
 
           <div className="form-floating mb-3">
@@ -129,12 +131,12 @@ function SetMilkPrice() {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
-            <label>Milk Rate</label>
+            <label>{t("milk_rate")}</label>
           </div>
 
           <div className="form-floating mb-3">
             <input type="number" className="form-control" value={fat} readOnly />
-            <label>Fat</label>
+            <label>{t("fat")}</label>
           </div>
 
           <div className="text-center my-2">
@@ -144,7 +146,11 @@ function SetMilkPrice() {
                 onClick={handleEdit}
                 disabled={loading}
               >
-                {loading ? <PushSpinner size={30} color="white" /> : "Edit Milk Price"}
+                {loading ? (
+                  <PushSpinner size={30} color="white" />
+                ) : (
+                  t("edit_milk_price")
+                )}
               </button>
             ) : (
               <button
@@ -152,7 +158,11 @@ function SetMilkPrice() {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {loading ? <PushSpinner size={30} color="white" /> : "Set Milk Price"}
+                {loading ? (
+                  <PushSpinner size={30} color="white" />
+                ) : (
+                  t("set_milk_price")
+                )}
               </button>
             )}
           </div>
@@ -165,4 +175,5 @@ function SetMilkPrice() {
     </div>
   );
 }
+
 export default SetMilkPrice;
