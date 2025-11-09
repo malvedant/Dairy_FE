@@ -8,7 +8,7 @@ import "./i18n";
 
 import {
   Login, CowFeed, Contact, UserDashBord, Home, Signup, 
-  UpdateProfile, OpenAccountScreen,DairyData,FarmersData,FarmerScreen, MilkDailyCard,BillPayment,AdvancePayment,AllocateCowFeed,FarmersList,AddFarmers,SetMilkPrice,AddMilkCount,AddNewCowFeed,UpdateCowFeed,
+   OpenAccountScreen,DairyData,FarmersData,FarmerScreen,BillPayment,AdvancePayment,AllocateCowFeed,FarmersList,AddFarmers,SetMilkPrice,AddMilkCount,AddNewCowFeed,UpdateCowFeed,
   DairyAi
 } from './screens/index';
 
@@ -33,7 +33,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cow-feed-availability" element={<CowFeed />} />
-        <Route path="/update-profile" element={<UpdateProfile />} />
+       
         <Route path="/create-account" element={<OpenAccountScreen />} />
         <Route path="/update-cow-feed" element={<UpdateCowFeed />} />
         <Route path="/allocate-cowfeed" element={<AllocateCowFeed />} />

@@ -8,7 +8,7 @@ import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye';
 import Footer from '../components/Footer';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import api from '../api/api';
+
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { PushSpinner } from 'react-spinners-kit';

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Footer from "../components/Footer";
 import { ToastContainer, toast } from "react-toastify";
-import api from "../api/api";
+
 import { PushSpinner } from "react-spinners-kit";
 import { AppContext } from "../Context/AppContext";
 import axios from "axios";
