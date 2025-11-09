@@ -20,7 +20,7 @@ const FarmerTenDaysCowFeed = ({currentIndex}) => {
     const handleSubmit = async () => {
         try {
             const { data } = await axios.post(
-                "http://localhost:4000/api/D_owner/get-farmer-Ten-Days-cowFeed",
+                "https://dairy-be-1.onrender.com/api/D_owner/get-farmer-Ten-Days-cowFeed",
                 {
                     D_owner_id: userData.id,
                     farmer_id: farmersData[currentIndex]._id,

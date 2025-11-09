@@ -16,7 +16,7 @@ const FFarmersCowFeedAsPerDate = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.post("http://localhost:4000/api/D_owner/calculate-farmers-todays-cowFeed-price-bags", {
+      const { data } = await axios.post("https://dairy-be-1.onrender.com/api/D_owner/calculate-farmers-todays-cowFeed-price-bags", {
         D_owner_id: userData.D_owner_id,
         farmer_id: userData.id,
         date,

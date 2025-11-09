@@ -33,7 +33,7 @@ const DairyAi = () => {
     setThinking(true);
 
     try {
-      const res = await axios.post("http://localhost:4000/api/user/runAi", {
+      const res = await axios.post("https://dairy-be-1.onrender.com/api/user/runAi", {
         userMessage,
       });
 

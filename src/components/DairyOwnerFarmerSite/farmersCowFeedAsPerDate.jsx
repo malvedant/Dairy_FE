@@ -17,7 +17,7 @@ const FarmersCowFeedAsPerDate = ({ currentIndex }) => {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/D_owner/calculate-farmers-todays-cowFeed-price-bags",
+        "https://dairy-be-1.onrender.com/api/D_owner/calculate-farmers-todays-cowFeed-price-bags",
         {
           D_owner_id: userData.id,
           farmer_id: farmersData[currentIndex]._id,

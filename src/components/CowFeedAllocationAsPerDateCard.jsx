@@ -17,7 +17,7 @@ const CowFeedAllocationAsPerDateCard = () => {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/D_owner/get-All-cowfeed-transactions-asper-date",
+        "https://dairy-be-1.onrender.com/api/D_owner/get-All-cowfeed-transactions-asper-date",
         { D_owner_id: userData.id, date }
       );
 
@@ -38,7 +38,7 @@ const CowFeedAllocationAsPerDateCard = () => {
   const calculatedTotalCowFeedAndPrice = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/D_owner/calculate-todays-cowFeed-price-bags",
+        "https://dairy-be-1.onrender.com/api/D_owner/calculate-todays-cowFeed-price-bags",
         { D_owner_id: userData.id, date }
       );
       if (data.success) {

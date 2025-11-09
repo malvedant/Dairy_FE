@@ -11,7 +11,7 @@ export const AppContextProvider = ({ children }) => {
   const navigate=useNavigate();
   axios.defaults.withCredentials = true;
 
-  const backendUrl = "http://localhost:4000";
+  const backendUrl = "https://dairy-be-1.onrender.com";
   const [token, setToken] = useState(localStorage.getItem("authToken") || null);
   const [milkprice, setMilkprice] = useState("");
   const [userData, setUserData] = useState(
@@ -222,7 +222,7 @@ export const AppContextProvider = ({ children }) => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/D_owner/calculate-todays-cowFeed-price-bags",
+        "https://dairy-be-1.onrender.com/api/D_owner/calculate-todays-cowFeed-price-bags",
         {
           D_owner_id: userData.id,
           date: todaysCowFeedData.date,

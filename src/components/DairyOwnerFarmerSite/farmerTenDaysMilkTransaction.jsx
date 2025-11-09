@@ -18,7 +18,7 @@ const FarmerTenDaysMilkCollection = ({ currentIndex }) => {
   const handleSubmit = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/D_owner/get-farmer-Ten-Days-Milk-Collection",
+        "https://dairy-be-1.onrender.com/api/D_owner/get-farmer-Ten-Days-Milk-Collection",
         {
           D_owner_id: userData.id,
           farmer_id: farmersData[currentIndex]._id,
