@@ -29,7 +29,7 @@ function Login() {
   const [passwordType, setPasswordType] = useState('password');
   const [icon, setIcon] = useState(eyeOff);
 
-  const { backendUrl, setToken, userData, getUserData, getFarmersData, getCowFeedDetails, getAllAdvancePayment } = useContext(AppContext);
+  const { backendUrl,  getUserData  } = useContext(AppContext);
 
   // Handle login logic
   const loginHandler = async () => {
