@@ -5,18 +5,7 @@ import { AppContext } from "../Context/AppContext";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next"; // ✅ Added language logic
 
-import FarmerListCard from '../components/modals/FarmerListCard';
-import TodaysMilkCountDetailsCard from '../components/todaysMilkCoutDetailsCard.jsx';
-import TodaysCowFeedDataCard from '../components/todaysCowFeedDataCard.jsx';
-import AdvancePaymentCard from "../components/AdvancePaymentCard.jsx";
-import MilkPriceHistoryCard from '../components/MilkPriceHistoryCard.jsx';
-import MilkCollectionAsPerDateCard from '../components/milkCollectionAsPerDateCard.jsx';
-import CowFeedAllocationAsPerDateCard from '../components/CowFeedAllocationAsPerDateCard.jsx';
-import PaymentHistoryCard from '../components/PaymentHistoryCard.jsx';
-import TenDaysMilkCollectionCard from '../components/TenDaysMilkCollectionCard.jsx';
-import TenDaysCowFeedAllocationCard from '../components/TenDaysCowFeedAllocationCard.jsx';
-import EmiTransactionCard from '../components/EmiTransactionCard.jsx';
-import FeedCard from "../components/CowFeedCard";
+
 import FarmersTodayMilkCollection from "../components/DairyOwnerFarmerSite/farmersTodayMilkCollection.jsx";
 import FarmersTodayCowFeed from "../components/DairyOwnerFarmerSite/farmersTodaysCowFeed.jsx";
 import FarmersMilkPriceHistory from "../components/DairyOwnerFarmerSite/farmersMilkPriceHistory.jsx";
